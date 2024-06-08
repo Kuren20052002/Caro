@@ -11,8 +11,8 @@ class AI < Player
   end
 
   def make_move
-    if mode == 1
-      Math.rand(10)
+    if @mode == 1
+      rand(1..9)
     else
 
     end
@@ -23,8 +23,8 @@ class AI < Player
 
   def pick_ai_difficulty
     puts "Choose AI difficulty:\n" \
-         "1: Easy\n" \
-         "2: Impossible"
+         "1: Impossible to lose\n" \
+         "2: Impossible to win\n"
 
     mode = nil
     loop do

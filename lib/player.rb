@@ -7,7 +7,7 @@ class Player
   end
 
   def make_move
-    puts "Make a move: "
+    print "Make a move: "
     gets.to_i
   end
 
