@@ -11,6 +11,8 @@ class Player
     gets.to_i
   end
 
+  private
+
   def whats_your_name
     puts "What's your name?"
     loop do

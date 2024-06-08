@@ -4,7 +4,7 @@ class Game
   end
 
   def start
-    pick_symbol
+    create_player
     pick_ai_difficulty
   end
 
@@ -24,7 +24,18 @@ class Game
     @ai = AI.new(mode)
   end
 
-  def pick_symbol
-    puts "Choose your symbol: X or O (X plays first):"
+  def create_player
+    @player = Player.new
+  end
+
+  def make_turn(player)
+    loop do
+      move = player.make_move
+      if board.valid_move?(move)
+        board.mark(move, player.symbol)
+      elsif @player == player
+        puts "Invalid move, please choose an empty square"
+      end
+    end
   end
 end
