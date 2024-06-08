@@ -5,27 +5,22 @@ class Game
 
   def start
     create_player
-    pick_ai_difficulty
+    creaete_ai
+
+    @current_player =
+
+      turn = 1
+    turn += 1 until turn > 9
   end
 
-  def pick_ai_difficulty
-    puts "Choose AI difficulty:\n" \
-         "1: Easy\n" \
-         "2: Impossible"
-
-    mode = nil
-    loop do
-      mode = gets.to_i
-      break if [1, 2].include?(mode)
-
-      puts "Invalid input, please choose again"
-    end
-
-    @ai = AI.new(mode)
-  end
+  private
 
   def create_player
     @player = Player.new
+  end
+
+  def create_ai
+    @ai = AI.new(@player.symbol)
   end
 
   def make_turn(player)
@@ -36,6 +31,14 @@ class Game
       elsif @player == player
         puts "Invalid move, please choose an empty square"
       end
+    end
+  end
+
+  def switch_player(current_player)
+    if current_player == @ai
+      @player
+    else
+      @ai
     end
   end
 end
