@@ -1,3 +1,4 @@
+# this ties everything together
 class Game
   attr_reader :board, :player, :ai, :current_player
 
@@ -26,7 +27,7 @@ class Game
 
   def make_turn(player)
     loop do
-      move = player.make_move
+      move = player.make_move(board)
       if board.valid_move?(move)
         board.mark(move, player.symbol)
         break
@@ -37,9 +38,7 @@ class Game
   end
 
   def battle
-    round = 1
-    until round > 9
-      round += 1
+    9.times do
       board.display
       make_turn(@current_player)
       if board.anyone_won?

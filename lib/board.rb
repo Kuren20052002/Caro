@@ -1,3 +1,4 @@
+# this the grid you play on, woww
 class Board
   attr_reader :squares
 
@@ -8,12 +9,16 @@ class Board
     @squares = [1, 2, 3, 4, 5, 6, 7, 8, 9]
   end
 
-  def display
+  def display # rubocop:disable Metrics/AbcSize
     puts "  #{squares[0]} | #{squares[1]} | #{squares[2]} \n " \
          "---|---|---\n  " \
          "#{squares[3]} | #{squares[4]} | #{squares[5]} \n " \
          "---|---|---\n  " \
          "#{squares[6]} | #{squares[7]} | #{squares[8]} \n\n"
+  end
+
+  def give_empty_squares
+    squares.filter { |square| square != "X" && squares != "O" }
   end
 
   def mark(pos, symbol)

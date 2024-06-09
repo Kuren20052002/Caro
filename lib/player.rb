@@ -1,3 +1,4 @@
+# this you
 class Player
   attr_reader :name, :symbol
 
@@ -6,7 +7,7 @@ class Player
     @symbol = what_symbol
   end
 
-  def make_move
+  def make_move(board) # rubocop:disable Lint/UnusedMethodArgument
     print "Make a move: "
     gets.to_i
   end
