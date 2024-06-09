@@ -15,11 +15,14 @@ class AI < Player
     current_board = board.clone
     return rand(1..9) if @mode == 1
 
-    return handle_first_move if current_board.give_empty_squares.length == 9 ||
-                                current_board.give_empty_squares.length == 8
+    return handle_first_move(current_board) if current_board.give_empty_squares.length == 9 ||
+                                               current_board.give_empty_squares.length == 8
 
-    minimax = minimax(current_board, symbol)
-    minimax[:index]
+    best_move = can_i_win?(current_board)
+    best_move ||= should_i_block?(current_board)
+    best_move ||= rand(1..9)
+
+    best_move
   end
 
   private
@@ -27,7 +30,7 @@ class AI < Player
   def pick_ai_difficulty
     puts "Choose AI difficulty:\n" \
          "1: Easy\n" \
-         "2: Impossible\n"
+         "2: Normal\n"
 
     mode = nil
     loop do
@@ -38,65 +41,40 @@ class AI < Player
     end
   end
 
-  def minimax(current_board, current_symbol)
-    available_square_index = current_board.give_empty_squares
-    if check_win(@symbol)
-      return { score: 1 }
-    elsif check_win(@opponent_symbol)
-      return { score: -1 }
-    elsif available_square_index.empty?
-      return { score: 0 }
-    end
-
-    future_results = []
-    available_square_index.each do |index|
-      current_result = {}
-      current_result[:index] = index - 1
-      current_result[:score] = 1
-      current_board.mark(index - 1, current_symbol)
-      if current_symbol == @symbol
-        result = minimax(current_board, @opponent_symbol)
-        current_result[:score] = result.score
-      elsif current_symbol == @opponent_symbol
-        result = minimax(current_board, @symbol)
-        current_result[:score] = result.score
-      end
-      current_board.mark(index - 1, index)
-      future_results.push(current_result)
-    end
-
-    best_play = nil
-    if current_symbol == @symbol
-      best_score = -100
-      future_results.each do |result|
-        if result[:score] > best_score
-          best_score = result[:score]
-          best_play = result[:index]
-        end
-      end
-    else
-      best_score = 100
-      future_results.each do |result|
-        if result[:score] < best_score
-          best_score = result[:score]
-          best_play = result[:index]
-        end
-      end
-    end
-    future_results[best_play]
-  end
-
-  def handle_first_move
+  def handle_first_move(current_board)
     if @symbol == "X"
-      CORNERS.sample
-    elsif CORNERS.any? { |corner| corner == "X" }
-      4
+      CORNERS.sample + 1
+    elsif CORNERS.any? { |corner| current_board.squares[corner] == "X" }
+      5
     else
       rand(1..9)
     end
   end
 
-  def check_win(player_symbol)
-    WOMBO_COMBO.any? { |combo| (combo.include? player_symbol) && ([combo[0], combo[1], combo[2]].uniq.length == 1) }
+  def should_i_block?(current_board)
+    WOMBO_COMBO.each do |combo|
+      result = winning_line?(combo, @opponent_symbol, @symbol, current_board)
+      return result if result != 0
+    end
+
+    false
+  end
+
+  def can_i_win?(current_board)
+    WOMBO_COMBO.each do |combo|
+      result = winning_line?(combo, @symbol, @opponent_symbol, current_board)
+      return result if result != 0
+    end
+
+    false
+  end
+
+  def winning_line?(combo, symbol_to_check, symbol_not_check, current_board)
+    line = [current_board.squares[combo[0]], current_board.squares[combo[1]], current_board.squares[combo[2]]]
+    if line.count(symbol_to_check) == 2 && !line.include?(symbol_not_check)
+      index = line[line.find_index { |number| number != symbol_to_check }]
+    else
+      0
+    end
   end
 end
