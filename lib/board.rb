@@ -10,6 +10,7 @@ class Board
   end
 
   def display # rubocop:disable Metrics/AbcSize
+    system "clear"
     puts "  #{squares[0]} | #{squares[1]} | #{squares[2]} \n " \
          "---|---|---\n  " \
          "#{squares[3]} | #{squares[4]} | #{squares[5]} \n " \
